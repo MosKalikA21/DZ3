@@ -54,6 +54,20 @@ void print_dot(int n, int** arr) {
     fprintf(f, "}\n");
     fclose(f);
 }
+void connected(int n, int r, int** arr){
+    if (//какой-то аргумент, определяющий отсутствие кратных ребер){
+        printf("Граф имеет кратные петли и ребра. Теорему применить нельзя!\n");
+    }
+    else {
+        printf("Граф не имеет кратные петли и ребра. Теорему можно испытать!\n");
+     if (r < ((n - 1) * (n - 2)) / 2) {
+      printf("Граф несвязный, теорема не работает\n");  
+      } 
+    else {
+      printf("Граф связный, теорема работает\n");   
+      }
+                    }
+}
 
 
 int main()
@@ -74,7 +88,7 @@ int main()
     print_graph(n, arr);
     print_dot(n, arr);
     // проверка отсутствия кратных ребер
-   // connected(n,r, arr);
+    connected(n,r, arr);
     
     printf("Добавляем новую вершину!\n");
     int** arr2 = create_array(n + 1);
