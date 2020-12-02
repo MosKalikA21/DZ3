@@ -44,7 +44,7 @@ void print_dot(int n, int** arr) {
             printf("\n");
     for (i = 0; i < n; i++){              
         for (j = i; j < n; j++){          
-                if(arr[i][j] == 1){         
+                for (int m = 0; m < arr[i][j]; m++){         
             printf("%d -- %d;\n", i, j);
             fprintf(f, "%d -- %d;\n", i, j);
         }
@@ -55,20 +55,33 @@ void print_dot(int n, int** arr) {
     fclose(f);
 }
 void connected(int n, int r, int** arr){
-    if (arr[i][j] != 1){    //какой-то аргумент, определяющий отсутствие кратных ребер
-        printf("Граф имеет кратные петли и ребра. Теорему применить нельзя!\n");
+    int k = 0;
+    for (int i = 0; i < n; i++){              
+        for (int j = 0; j < n; j++){ 
+            if (arr[i][j] > 1){   
+                k = k + 1;
+            }
+            if (i==j && arr[i][j] == 1){
+                k = k + 1;
+            }
+        }
     }
-    else {
-        printf("Граф не имеет кратные петли и ребра. Теорему можно испытать!\n");
-     if (r < ((n - 1) * (n - 2)) / 2) {
-      printf("Граф несвязный, теорема не работает\n");  
-      } 
-    else {
-      printf("Граф связный, теорема работает\n");   
-      }
-                    }
+    printf ("%d\n", k);
+        if(k > 0){
+            printf("Граф имеет кратные ребра и петли. Теорему применить нельзя!\n");
+        }
+        else {
+            printf("Граф не имеет кратные ребра и петли. Можно применить теорему!\n");
+        }
+    if(k == 0){
+        if (r < ((n - 1) * (n - 2)) / 2) {
+            printf("Граф несвязный, теорема не работает\n");  
+        } 
+        else {
+            printf("Граф связный, теорема работает\n");   
+        }
+    }
 }
-
 
 int main()
 {   setlocale(LC_ALL, "RUS");
@@ -82,12 +95,14 @@ int main()
             for (int i = 0; i < r; i++){
         scanf(" %d" "%d", &a1, &a2);
                arr[a1][a2] += 1;
-               arr[a2][a1] += 1;      
+               arr[a2][a1] += 1;    
+        if(a1 == a2){
+            arr[a1][a2] -=1;
+        }       
 }
     
     print_graph(n, arr);
     print_dot(n, arr);
-    // проверка отсутствия кратных ребер
     connected(n,r, arr);
     
     printf("Добавляем новую вершину!\n");
@@ -99,18 +114,22 @@ int main()
     }
     
     free_array(n, arr);
-    print_graph(n + 1, arr2);
+    arr = arr2;
+    print_graph(n + 1, arr);
     printf("Сколько раз вы будете соединять новую вершину?\n");
     scanf("%d", &r);
     printf("Введите вершины, с которыми хотите соединить в качестве ребер:\n");
     for (int i = 0; i < r; i++){
        scanf(" %d", &a2);
-       arr2[n][a2] = 1;
-       arr2[a2][n] = 1;      
+       arr[n][a2] += 1;
+       arr[a2][n] += 1;  
+       if(n == a2){
+            arr[n][a2] -=1;
+        } 
     }
     
-    print_graph(n + 1, arr2);
-    print_dot(n + 1, arr2);
-    free_array(n + 1, arr2);
+    print_graph(n + 1, arr);
+    print_dot(n + 1, arr);
+    free_array(n + 1, arr);
     return 0;
     }
